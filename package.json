@@ -1,0 +1,11 @@
+{
+  "name": "magi-model-health-check",
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
