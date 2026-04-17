@@ -6,7 +6,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 // MAGIで現在使用中のモデル
 const MAGI_MODELS = {
   mistral:   { model: "mistral-small-latest",                          unit: "SOPHIA-5" },
-  gemini:    { model: "gemini-2.0-flash",                              unit: "MELCHIOR-1" },
+  gemini:    { model: "gemini-3-flash-preview",                        unit: "MELCHIOR-1" },
   groq:      { model: "llama-3.3-70b-versatile",                       unit: "ANIMA" },
   deepseek:  { model: "deepseek-chat",                                 unit: "CASPER" },
   together:  { model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", unit: "ORACLE" },
