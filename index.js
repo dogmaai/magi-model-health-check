@@ -8,10 +8,10 @@ const MAGI_MODELS = {
   mistral:   { model: "mistral-small-latest",                          unit: "SOPHIA-5" },
   gemini:    { model: "gemini-3-flash-preview",                        unit: "MELCHIOR-1" },
   groq:      { model: "llama-3.3-70b-versatile",                       unit: "ANIMA" },
-  deepseek:  { model: "deepseek-chat",                                 unit: "CASPER" },
+  deepseek:  { model: "deepseek-v4-flash",                            unit: "CASPER" },
   together:  { model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", unit: "ORACLE" },
   qwen:      { model: "qwen-plus",                                     unit: "QWEN" },
-  xai:       { model: "grok-4-1-fast",                                 unit: "BALTHASAR" },
+  xai:       { model: "grok-4.20-0309-non-reasoning",                 unit: "BALTHASAR" },
 };
 
 async function sendTelegram(message) {
