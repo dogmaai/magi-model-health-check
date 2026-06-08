@@ -9,7 +9,6 @@ const MAGI_MODELS = {
   gemini:    { model: "gemini-3-flash-preview",                        unit: "MELCHIOR-1" },
   groq:      { model: "llama-3.3-70b-versatile",                       unit: "ANIMA" },
   deepseek:  { model: "deepseek-v4-flash",                            unit: "CASPER" },
-  together:  { model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", unit: "ORACLE" },
   qwen:      { model: "qwen-plus",                                     unit: "QWEN" },
   xai:       { model: "grok-4.20-0309-non-reasoning",                 unit: "BALTHASAR" },
 };
@@ -58,14 +57,6 @@ async function checkDeepSeek() {
   return (data.data || []).map(m => m.id);
 }
 
-async function checkTogether() {
-  const res = await fetch("https://api.together.xyz/v1/models", {
-    headers: { "Authorization": "Bearer " + process.env.TOGETHER_API_KEY }
-  });
-  const data = await res.json();
-  return (data || []).map(m => m.id);
-}
-
 async function checkQwen() {
   const res = await fetch("https://dashscope-intl.aliyuncs.com/compatible-mode/v1/models", {
     headers: { "Authorization": "Bearer " + process.env.QWEN_API_KEY }
@@ -87,7 +78,6 @@ const CHECKERS = {
   gemini:   checkGemini,
   groq:     checkGroq,
   deepseek: checkDeepSeek,
-  together: checkTogether,
   qwen:     checkQwen,
   xai:      checkXAI,
 };
@@ -124,7 +114,7 @@ async function main() {
 
   if (issues.length === 0) {
     console.log("[HEALTH CHECK] All models OK");
-    await sendTelegram("MAGI Model Health Check\nAll 7 models are available.");
+    await sendTelegram(`MAGI Model Health Check\nAll ${Object.keys(MAGI_MODELS).length} models are available.`);
   } else {
     let msg = "<b>MAGI Model Health Check - ISSUES DETECTED</b>\n\n";
     for (const issue of issues) {
