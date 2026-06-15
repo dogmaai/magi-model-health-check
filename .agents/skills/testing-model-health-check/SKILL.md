@@ -18,6 +18,13 @@ This is why this monitor and magi-core's `health-monitor.js` (which does a live 
 The model list lives in `MAGI_MODELS` at the top of `index.js` — fix model-name alerts HERE, not only in magi-core.
 `main()` runs at import time (bottom of index.js).
 
+## KEY GOTCHA: 403/billing errors vs actual MODEL NOT FOUND
+Provider APIs may return HTTP 403 when credits are exhausted or spending limits are reached.
+With the `!res.ok` throw guard, these now correctly report as **API ERROR** (not false "MODEL NOT FOUND").
+If you see `[XAI] Error: HTTP 403` in test output, the root cause is **billing/credits**, not model deprecation.
+Check xAI team billing status before assuming a model was removed.
+An empty `Available:` field in the alert is a strong signal of 403/auth issues (real model listings are never empty).
+
 ## How to test (shell-only, no GUI / no recording)
 1. `npm install` in the repo (only dep is `node-fetch`).
 2. Fetch the 7 provider keys from Secret Manager (project `screen-share-459802`):
@@ -31,12 +38,19 @@ The model list lives in `MAGI_MODELS` at the top of `index.js` — fix model-nam
    and the `ISSUES DETECTED` alert text to be built.
 5. Fix verification: `git checkout HEAD -- index.js` (or your branch), run -> expect those units `-> OK`,
    `[SUMMARY]` all `OK`, and `[HEALTH CHECK] All models OK` (no ISSUES alert).
-6. Assert on exact console strings (e.g. `[XAI] grok-4.20-0309-non-reasoning -> OK`). Clean up temp `.mjs` after.
+6. Assert on exact console strings (e.g. `[XAI] grok-4.3 -> OK`). Clean up temp `.mjs` after.
+
+## Testing error handling (403/auth scenarios)
+When a provider returns non-200 (e.g. 403 credit exhaustion):
+- **Expected with fix**: `[PROVIDER] Error: HTTP 403: {...}` and `[SUMMARY] provider: ERROR`
+- **Old broken behavior**: `[PROVIDER] model -> NOT FOUND` with empty `Available:` (misleading)
+- To reproduce: use an API key with exhausted credits (xAI is prone to this).
+- The catch block at ~line 109 routes thrown errors to `status: "ERROR"` and alert shows `API ERROR`.
 
 ## Verifying a new model ID is valid
 The monitor only accepts IDs present in the provider's `/models` listing. Before changing `MAGI_MODELS`,
-confirm the new ID appears in `GET /models` for that provider (e.g. DeepSeek lists `deepseek-v4-flash`,
-xAI lists `grok-4.20-0309-non-reasoning`). Mirror whatever magi-core actually uses.
+confirm the new ID appears in `GET /models` for that provider. Mirror whatever magi-core actually uses.
+If the API returns 403, check billing first — the model might still be valid.
 
 ## Devin Secrets Needed
 All fetched from GCP Secret Manager (project `screen-share-459802`) via `/home/ubuntu/gcp-key.json`:
