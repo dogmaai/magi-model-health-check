@@ -29,6 +29,7 @@ async function checkMistral() {
   const res = await fetch("https://api.mistral.ai/v1/models", {
     headers: { "Authorization": "Bearer " + process.env.MISTRAL_API_KEY }
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.data || []).map(m => m.id);
 }
@@ -37,6 +38,7 @@ async function checkGemini() {
   const res = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models?key=" + process.env.GEMINI_API_KEY
   );
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.models || []).map(m => m.name.replace("models/", ""));
 }
@@ -45,6 +47,7 @@ async function checkGroq() {
   const res = await fetch("https://api.groq.com/openai/v1/models", {
     headers: { "Authorization": "Bearer " + process.env.GROQ_API_KEY }
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.data || []).map(m => m.id);
 }
@@ -53,6 +56,7 @@ async function checkDeepSeek() {
   const res = await fetch("https://api.deepseek.com/models", {
     headers: { "Authorization": "Bearer " + process.env.DEEPSEEK_API_KEY }
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.data || []).map(m => m.id);
 }
@@ -61,6 +65,7 @@ async function checkQwen() {
   const res = await fetch("https://dashscope-intl.aliyuncs.com/compatible-mode/v1/models", {
     headers: { "Authorization": "Bearer " + process.env.QWEN_API_KEY }
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.data || []).map(m => m.id);
 }
@@ -69,6 +74,7 @@ async function checkXAI() {
   const res = await fetch("https://api.x.ai/v1/models", {
     headers: { "Authorization": "Bearer " + process.env.XAI_API_KEY }
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).substring(0, 200)}`);
   const data = await res.json();
   return (data.data || []).map(m => m.id);
 }
