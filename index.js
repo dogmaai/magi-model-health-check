@@ -10,7 +10,7 @@ const MAGI_MODELS = {
   groq:      { model: "llama-3.3-70b-versatile",                       unit: "ANIMA" },
   deepseek:  { model: "deepseek-v4-flash",                            unit: "CASPER" },
   qwen:      { model: "qwen-plus",                                     unit: "QWEN" },
-  xai:       { model: "grok-4.20-0309-non-reasoning",                 unit: "BALTHASAR" },
+  xai:       { model: "grok-4.3",                                     unit: "BALTHASAR" },
 };
 
 async function sendTelegram(message) {
